@@ -1,0 +1,33 @@
+# API Gateway Configuration
+# This configuration file defines the settings for the Spring Cloud Gateway service
+# which acts as an entry point for the microservices architecture.
+
+# Server configuration
+server:
+  port: 8080  # The API Gateway will run on port 8080
+
+# Spring application configuration
+spring:
+  application:
+    name: api-gateway  # Service name registered with Eureka
+  cloud:
+    gateway:
+      routes:
+        # Product Service Route Configuration
+        - id: product-service  # Unique identifier for the route
+          uri: lb://PRODUCT-SERVICE  # Target URI using load balancing (lb://) with the service name
+          predicates:
+            - Path=/products/**  # Routes requests with path /products/** to the product service
+
+        # Order Service Route Configuration
+        - id: order-service  # Unique identifier for the route
+          uri: lb://ORDER-SERVICE  # Target URI using load balancing with the service name
+          predicates:
+            - Path=/orders/**  # Routes requests with path /orders/** to the order service
+
+# Eureka client configuration for service discovery
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/  # URL of the Eureka server for service registration
+
